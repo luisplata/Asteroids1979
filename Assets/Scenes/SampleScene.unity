@@ -119,6 +119,60 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
+--- !u!1 &253001096
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 253001098}
+  - component: {fileID: 253001097}
+  m_Layer: 0
+  m_Name: AsteroidSpawner
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!114 &253001097
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253001096}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 9699e7a581e545be86fe6e091ba46c33, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::AsteroidSpawner
+  asteroidPrefab: {fileID: 2441259122367393624, guid: c1110a719742cc34c951d29504b4cc87, type: 3}
+  player: {fileID: 519844312}
+  spawnRate: 1.5
+  minSpawnRate: 0.4
+  difficultyRamp: 0.98
+  spawnDistance: 25
+  spawnDistanceVariance: 1
+  coneAngle: 90
+  minSpeedMultiplier: 0.8
+  maxSpeedMultiplier: 1.2
+--- !u!4 &253001098
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 253001096}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &519420028
 GameObject:
   m_ObjectHideFlags: 0
@@ -301,7 +355,6 @@ GameObject:
   - component: {fileID: 519844314}
   - component: {fileID: 519844313}
   - component: {fileID: 519844315}
-  - component: {fileID: 519844316}
   - component: {fileID: 519844317}
   - component: {fileID: 519844319}
   - component: {fileID: 519844318}
@@ -418,23 +471,6 @@ MonoBehaviour:
   fireRate: 2
   bulletSpeed: 10
   maxTargetDistance: 10
---- !u!114 &519844316
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 519844311}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 9699e7a581e545be86fe6e091ba46c33, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: Assembly-CSharp::AsteroidSpawner
-  asteroidPrefab: {fileID: 2441259122367393624, guid: c1110a719742cc34c951d29504b4cc87, type: 3}
-  spawnRate: 0.2
-  spawnRadius: 30
-  minSpawnRate: 0.4
-  difficultyRamp: 0.98
 --- !u!114 &519844317
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -802,3 +838,4 @@ SceneRoots:
   - {fileID: 519844312}
   - {fileID: 1680343595}
   - {fileID: 2110614157}
+  - {fileID: 253001098}

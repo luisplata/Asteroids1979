@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -6,29 +5,29 @@ public class Asteroid : MonoBehaviour
 {
     [SerializeField] private AsteroidStats stats;
     [SerializeField] private float lifeTime;
+    private float _speedMultiplier = 1f;
 
-    private float currentHealth;
-    private Vector2 moveDirection;
+    private float _currentHealth;
+    private Vector2 _moveDirection;
 
     private bool _isDead = false;
 
     void Start()
     {
-        currentHealth = stats.maxHealth;
-        moveDirection = Random.insideUnitCircle.normalized;
+        _currentHealth = stats.maxHealth;
         Die(lifeTime);
     }
 
     void Update()
     {
-        transform.Translate(moveDirection * (stats.moveSpeed * Time.deltaTime));
+        transform.Translate(_moveDirection * (stats.moveSpeed * Time.deltaTime));
     }
 
     public bool TakeDamage(float amount)
     {
-        currentHealth -= amount;
+        _currentHealth -= amount;
 
-        if (currentHealth <= 0f && !_isDead)
+        if (_currentHealth <= 0f && !_isDead)
         {
             Debug.Log("Asteroid destroyed");
             Die();
@@ -48,5 +47,11 @@ public class Asteroid : MonoBehaviour
     public float CollisionDamage()
     {
         return stats.damageOnHit;
+    }
+
+    public void SetMoveDirection(Vector2 direction, float speedMultiplier)
+    {
+        _moveDirection = direction.normalized;
+        _speedMultiplier = speedMultiplier;
     }
 }
