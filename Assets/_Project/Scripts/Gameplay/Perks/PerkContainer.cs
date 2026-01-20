@@ -4,7 +4,7 @@ using UnityEngine;
 public class PerkContainer : MonoBehaviour
 {
     private Player player;
-    private readonly List<PerkData> activePerks = new();
+    [SerializeField] private List<PerkData> activePerks = new();
 
     void Awake()
     {

@@ -1,4 +1,6 @@
+using System;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Asteroid : MonoBehaviour
 {
@@ -7,6 +9,8 @@ public class Asteroid : MonoBehaviour
 
     private float currentHealth;
     private Vector2 moveDirection;
+
+    private bool _isDead = false;
 
     void Start()
     {
@@ -20,18 +24,29 @@ public class Asteroid : MonoBehaviour
         transform.Translate(moveDirection * (stats.moveSpeed * Time.deltaTime));
     }
 
-    public void TakeDamage(float amount)
+    public bool TakeDamage(float amount)
     {
         currentHealth -= amount;
 
-        if (currentHealth <= 0f)
+        if (currentHealth <= 0f && !_isDead)
         {
-            Die(0.1f);
+            Debug.Log("Asteroid destroyed");
+            Die();
+            ScoreSystem.Instance?.Add(1);
+            _isDead = true;
+            return true;
         }
+
+        return false;
     }
 
-    void Die(float timeToDelay)
+    private void Die(float timeToDelay = 0.1f)
     {
         Destroy(gameObject, timeToDelay);
+    }
+
+    public float CollisionDamage()
+    {
+        return stats.damageOnHit;
     }
 }

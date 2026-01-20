@@ -44,6 +44,9 @@ public class AutoShooter : MonoBehaviour
             rotation
         );
 
+        var provider = player.GetComponent<ExplosionOnKillProvider>();
+        provider?.ApplyTo(bullet);
+
         var rb = bullet.GetComponent<Rigidbody2D>();
         rb.linearVelocity = direction * bulletSpeed;
 
