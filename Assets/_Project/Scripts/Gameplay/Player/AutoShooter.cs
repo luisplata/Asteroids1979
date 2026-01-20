@@ -10,6 +10,9 @@ public class AutoShooter : MonoBehaviour
     private Player player;
 
     private float timer;
+    private Vector3 direction;
+
+    public Vector3 Direction => direction;
 
     void Awake()
     {
@@ -32,7 +35,7 @@ public class AutoShooter : MonoBehaviour
         Asteroid target = FindClosestAsteroid();
         if (target == null) return;
 
-        Vector2 direction =
+        direction =
             (target.transform.position - transform.position).normalized;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
