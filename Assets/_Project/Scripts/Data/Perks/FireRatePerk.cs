@@ -8,5 +8,6 @@ public class FireRatePerk : PerkData
     public override void Apply(Player player)
     {
         player.stats.fireRate *= fireRateMultiplier;
+        player.UpdateStats();
     }
 }
