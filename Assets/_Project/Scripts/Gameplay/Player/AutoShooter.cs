@@ -48,10 +48,14 @@ public class AutoShooter : MonoBehaviour
         provider?.ApplyTo(bullet);
 
         var rb = bullet.GetComponent<Rigidbody2D>();
-        rb.linearVelocity = direction * bulletSpeed;
+        rb.linearVelocity = direction * (bulletSpeed * player.bulletConfig.speedMultiplier);
 
-        bullet.GetComponent<BulletDamage>()
-            .SetDamage(player.stats.damage);
+        var bulletDamate = bullet.GetComponent<BulletDamage>();
+        bulletDamate.SetDamage(player.stats.damage * player.bulletConfig.damage);
+        bulletDamate.ConfigurePierce(
+            player.bulletConfig.pierce,
+            player.bulletConfig.pierceCount
+        );
     }
 
 

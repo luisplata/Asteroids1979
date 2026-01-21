@@ -4,6 +4,15 @@ public class BulletDamage : MonoBehaviour
 {
     private float damage;
     private ExplosionOnKill explosionEffect;
+    [SerializeField] private bool pierce;
+    [SerializeField] private int maxPierceCount = 1;
+    private int currentPierce;
+
+    public void ConfigurePierce(bool enabled, int count = 1)
+    {
+        pierce = enabled;
+        maxPierceCount = count;
+    }
 
     public void SetDamage(float value)
     {
@@ -21,7 +30,14 @@ public class BulletDamage : MonoBehaviour
             OnAsteroidKilled(asteroid);
         }
 
-        Destroy(gameObject);
+        if (!pierce || currentPierce >= maxPierceCount)
+        {
+            Destroy(gameObject);
+        }
+        else
+        {
+            currentPierce++;
+        }
     }
 
     void OnAsteroidKilled(Asteroid asteroid)

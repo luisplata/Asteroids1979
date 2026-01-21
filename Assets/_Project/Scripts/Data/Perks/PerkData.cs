@@ -2,9 +2,10 @@ using UnityEngine;
 
 public abstract class PerkData : ScriptableObject
 {
-    [Header("Perk Info")]
     public string perkName;
-    [TextArea] public string description;
+    public Sprite icon;
+    public string description;
+    public bool isSelectable = true;
 
-    public abstract void Apply(Player player);
+    public abstract void Apply(Player target);
 }

@@ -11,6 +11,8 @@ public class Asteroid : MonoBehaviour
     private Vector2 _moveDirection;
 
     private bool _isDead = false;
+    private bool _startExplotion;
+    public bool StartExplotion => _startExplotion;
 
     void Start()
     {
@@ -33,6 +35,12 @@ public class Asteroid : MonoBehaviour
             Die();
             ScoreSystem.Instance?.Add(1);
             _isDead = true;
+            _startExplotion = true;
+            if (gameObject.TryGetComponent<ExplosionFromKiller>(out var explosion))
+            {
+                explosion.Trigger(transform.position);
+            }
+
             return true;
         }
 
