@@ -15,6 +15,7 @@ MonoBehaviour:
   perkName: New Explotion
   icon: {fileID: 0}
   description: New Explotion
+  isSelectable: 1
   radius: 2
   damage: 1
   vfx: {fileID: 8771972552311404799, guid: bbf9e36a48d6c5648a13889afab076fd, type: 3}
