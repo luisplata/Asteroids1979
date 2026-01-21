@@ -1,14 +1,23 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Player : MonoBehaviour
 {
     [SerializeField] private PlayerHealth health;
     public PlayerStats stats;
+    public BulletConfig bulletConfig;
+
+    public Action<PlayerStats> onPlayerStatsUpdated;
 
     void Awake()
     {
         stats.Init();
+    }
+
+    private void OnEnable()
+    {
+        UpdateStats();
     }
 
     private void OnTriggerEnter2D(Collider2D other)
@@ -17,22 +26,17 @@ public class Player : MonoBehaviour
         if (asteroid != null)
         {
             health.TakeDamage(asteroid.CollisionDamage());
-            return;
         }
-
-        // var perk = other.GetComponent<Perk>();
-        // if (perk != null)
-        // {
-        //     perk.ApplyTo(this);
-        //     Destroy(perk.gameObject);
-        //     return;
-        // }
     }
 
     [ContextMenu("Restart Game")]
     public void RestartGame()
     {
-        Time.timeScale = 1f;
-        SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
+        GamePauseController.Resume();
+    }
+
+    public void UpdateStats()
+    {
+        onPlayerStatsUpdated?.Invoke(stats);
     }
 }

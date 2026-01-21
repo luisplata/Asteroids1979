@@ -13,7 +13,9 @@ MonoBehaviour:
   m_Name: New Explosion On Kill Perk
   m_EditorClassIdentifier: Assembly-CSharp::ExplosionOnKillPerk
   perkName: Explotion
-  description: descripcion
+  icon: {fileID: 0}
+  description: Take Explotion
+  isSelectable: 1
   radius: 3
   damage: 1
   explosionVfx: {fileID: 1429954232896169633, guid: 83036083a4ebcd34f98131bd3cf6f4d2, type: 3}

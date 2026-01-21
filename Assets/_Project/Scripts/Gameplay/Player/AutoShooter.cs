@@ -10,6 +10,9 @@ public class AutoShooter : MonoBehaviour
     private Player player;
 
     private float timer;
+    private Vector3 direction;
+
+    public Vector3 Direction => direction;
 
     void Awake()
     {
@@ -32,7 +35,7 @@ public class AutoShooter : MonoBehaviour
         Asteroid target = FindClosestAsteroid();
         if (target == null) return;
 
-        Vector2 direction =
+        direction =
             (target.transform.position - transform.position).normalized;
 
         float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
@@ -48,10 +51,14 @@ public class AutoShooter : MonoBehaviour
         provider?.ApplyTo(bullet);
 
         var rb = bullet.GetComponent<Rigidbody2D>();
-        rb.linearVelocity = direction * bulletSpeed;
+        rb.linearVelocity = direction * (bulletSpeed * player.bulletConfig.speedMultiplier);
 
-        bullet.GetComponent<BulletDamage>()
-            .SetDamage(player.stats.damage);
+        var bulletDamate = bullet.GetComponent<BulletDamage>();
+        bulletDamate.SetDamage(player.stats.damage * player.bulletConfig.damage);
+        bulletDamate.ConfigurePierce(
+            player.bulletConfig.pierce,
+            player.bulletConfig.pierceCount
+        );
     }
 
 

@@ -9,7 +9,16 @@ public class ExplosionOnKillPerk : PerkData
 
     public override void Apply(Player player)
     {
-        player.gameObject.AddComponent<ExplosionOnKillProvider>()
-            .Init(radius, damage, explosionVfx);
+        if (player.gameObject.TryGetComponent<ExplosionOnKillProvider>(out var explotion))
+        {
+            explotion.Increment(radius, damage);
+        }
+        else
+        {
+            player.gameObject.AddComponent<ExplosionOnKillProvider>()
+                .Init(radius, damage, explosionVfx);
+        }
+
+        player.UpdateStats();
     }
 }
