@@ -4,15 +4,26 @@ using UnityEngine;
 public class ScoreSystem : MonoBehaviour
 {
     private static ScoreSystem _instance;
+    private static bool _isShuttingDown = false;
 
+    // Lazily find or create an instance when needed at runtime.
     public static ScoreSystem Instance
     {
         get
         {
             if (_instance == null)
             {
-                _instance = FindObjectOfType<ScoreSystem>();
-                if (_instance != null) return _instance;
+                // If quitting or not in play mode, don't create an instance
+                if (_isShuttingDown || !Application.isPlaying)
+                    return null;
+
+                // Try to find an existing instance in the scene (use FindFirstObjectByType if available)
+                _instance = FindFirstObjectByType<ScoreSystem>();
+
+                if (_instance != null)
+                    return _instance;
+
+                // Create a new GameObject with the ScoreSystem component
                 var go = new GameObject("ScoreSystem");
                 _instance = go.AddComponent<ScoreSystem>();
                 DontDestroyOnLoad(go);
@@ -36,6 +47,24 @@ public class ScoreSystem : MonoBehaviour
     {
         OnScoreChange?.Invoke(score, nextLevelScoreThreshold);
         OnLevelUp?.Invoke(level);
+    }
+
+    private void OnApplicationQuit()
+    {
+        // Mark that the application is quitting to avoid creating new instances during shutdown
+        _isShuttingDown = true;
+    }
+
+    private void OnDestroy()
+    {
+        // Prevent other OnDestroy calls from creating a new instance while scene is unloading
+        _isShuttingDown = true;
+
+        // Clear the static reference if this instance is being destroyed
+        if (_instance == this)
+        {
+            _instance = null;
+        }
     }
 
     public void Add(int amount)

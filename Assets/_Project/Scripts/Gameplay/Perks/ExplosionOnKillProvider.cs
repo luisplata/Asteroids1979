@@ -12,6 +12,13 @@ public class ExplosionOnKillProvider : MonoBehaviour
         _radius = radius;
         _damage = damage;
         _vfx = vfx;
+
+        // If attached to a player, inherit their chain preference
+        var player = GetComponent<Player>();
+        if (player != null)
+        {
+            _isChained = player.chainExplosions;
+        }
     }
 
     public void EnableChained()

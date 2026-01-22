@@ -8,6 +8,9 @@ public class Player : MonoBehaviour
     public PlayerStats stats;
     public BulletConfig bulletConfig;
 
+    // New: store whether player wants chain explosions (set by perks)
+    public bool chainExplosions = false;
+
     public Action<PlayerStats> onPlayerStatsUpdated;
 
     void Awake()
