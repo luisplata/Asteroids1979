@@ -15,6 +15,8 @@ public class HUDController : MonoBehaviour
         {
             ScoreSystem.Instance.OnLevelUp += UpdateLevel;
             ScoreSystem.Instance.OnScoreChange += UpdateScore;
+            UpdateLevel(1);
+            UpdateScore(0,0);
         }
     }
 

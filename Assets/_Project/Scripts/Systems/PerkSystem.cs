@@ -37,6 +37,10 @@ public class PerkSystem : MonoBehaviour
 
     private void OnLevelUp(int level)
     {
+        // Ignore the initial OnLevelUp invoked by ScoreSystem.OnEnable (initial level),
+        // we only want to show perks on an actual level up (level > 1).
+        if (level <= 1) return;
+
         var perks = PickRandomPerks(3);
         // If no perks available, skip showing UI and don't pause the game
         if (perks == null || perks.Length == 0)
