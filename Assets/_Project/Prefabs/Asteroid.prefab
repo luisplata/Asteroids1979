@@ -48,7 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Asteroid
   stats:
-    maxHealth: 2
+    maxHealth: 3
     moveSpeed: 2
     damageOnHit: 1
   lifeTime: 20
