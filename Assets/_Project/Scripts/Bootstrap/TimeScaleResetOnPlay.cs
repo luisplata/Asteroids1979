@@ -11,7 +11,7 @@ public static class TimeScaleResetOnPlay
         {
             if (state == PlayModeStateChange.EnteredPlayMode)
             {
-                Time.timeScale = 1f;
+                
             }
         };
     }

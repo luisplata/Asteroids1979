@@ -12,41 +12,76 @@ public class PerkSystem : MonoBehaviour
 
     void OnEnable()
     {
-        ScoreSystem.Instance.OnLevelUp += OnLevelUp;
+        // Protect against ScoreSystem.Instance being null during editor/teardown
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.OnLevelUp += OnLevelUp;
+
         selectedPerks = new List<PerkData>();
+
+        if (availablePerks == null) return;
+
         foreach (var availablePerk in availablePerks)
         {
-            selectedPerks.Add(Instantiate(availablePerk));
+            if (availablePerk != null)
+                selectedPerks.Add(Instantiate(availablePerk));
         }
     }
 
     void OnDisable()
     {
-        ScoreSystem.Instance.OnLevelUp -= OnLevelUp;
-        selectedPerks.Clear();
+        if (ScoreSystem.Instance != null)
+            ScoreSystem.Instance.OnLevelUp -= OnLevelUp;
+
+        selectedPerks?.Clear();
     }
 
     private void OnLevelUp(int level)
     {
+        // Ignore the initial OnLevelUp invoked by ScoreSystem.OnEnable (initial level),
+        // we only want to show perks on an actual level up (level > 1).
+        if (level <= 1) return;
+
         var perks = PickRandomPerks(3);
-        perkSelectionUI.Show(perks, OnPerkSelected);
-        GamePauseController.Pause();
+        // If no perks available, skip showing UI and don't pause the game
+        if (perks == null || perks.Length == 0)
+        {
+            Debug.LogWarning("PerkSystem: no selectable perks to show on level up.");
+            return;
+        }
+
+        // Protect UI reference
+        if (perkSelectionUI != null)
+        {
+            perkSelectionUI.Show(perks, OnPerkSelected);
+            GamePauseController.Pause();
+        }
     }
 
     private void OnPerkSelected(PerkData perk)
     {
-        perkContainer.AddPerk(perk);
-        GamePauseController.Resume();
+        if (perkContainer != null)
+        {
+            perkContainer.AddPerk(perk);
+            GamePauseController.Resume();
+        }
     }
 
     private PerkData[] PickRandomPerks(int count)
     {
+        if (selectedPerks == null)
+            return new PerkData[0];
+
+        var selectable = selectedPerks.Where(p => p != null && p.isSelectable).ToList();
+
+        if (selectable.Count == 0)
+            return new PerkData[0];
+
         var result = new PerkData[count];
         for (int i = 0; i < count; i++)
         {
-            List<PerkData> list = selectedPerks.Where(p => p.isSelectable).ToList();
-
-            result[i] = list[Random.Range(0, list.Count)];
+            // Allow duplicates if selectable.Count < count
+            var choice = selectable[Random.Range(0, selectable.Count)];
+            result[i] = choice;
         }
 
         return result;
