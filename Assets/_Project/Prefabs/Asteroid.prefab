@@ -51,7 +51,7 @@ MonoBehaviour:
     maxHealth: 3
     moveSpeed: 2
     damageOnHit: 1
-  lifeTime: 20
+  lifeTime: 21
 --- !u!61 &569335539633552469
 BoxCollider2D:
   m_ObjectHideFlags: 0
