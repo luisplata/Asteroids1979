@@ -1,4 +1,5 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Bootstrap;
+using UnityEngine;
 
 public class PlayerHealth : MonoBehaviour
 {
@@ -22,5 +23,6 @@ public class PlayerHealth : MonoBehaviour
     void Die()
     {
         Debug.Log("Game Over");
+        GameBootstrap.Instance.GameState.GameOver();
     }
 }

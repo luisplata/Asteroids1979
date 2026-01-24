@@ -51,6 +51,8 @@ public class AutoShooter : MonoBehaviour
             rotation
         );
 
+        AudioPlayerController.Instance.ShootSound();
+
         var provider = player.GetComponent<ExplosionOnKillProvider>();
         provider?.ApplyTo(bullet);
 

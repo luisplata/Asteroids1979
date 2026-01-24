@@ -11,6 +11,10 @@ public class Player : MonoBehaviour
     [SerializeField] private PlayerController controller;
     [SerializeField] private AutoShooter autoShooter;
 
+    public Action onShoot;
+    public Action onLevelUp;
+    
+
     // New: store whether player wants chain explosions (set by perks)
     public bool chainExplosions = false;
 
@@ -22,6 +26,7 @@ public class Player : MonoBehaviour
         if (asteroid != null)
         {
             health.TakeDamage(asteroid.CollisionDamage());
+            AudioPlayerController.Instance.PlayPlayerHitSound();
         }
     }
 

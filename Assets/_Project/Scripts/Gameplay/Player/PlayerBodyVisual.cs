@@ -1,36 +1,67 @@
+using System;
+using _Project.Scripts.Bootstrap;
 using UnityEngine;
 using _Project.Scripts.Gameplay.Player;
 
 public class PlayerBodyVisual : MonoBehaviour
 {
-    [Header("References")]
-    [SerializeField] private Rigidbody2D playerRigidbody2D;
+    [Header("References")] [SerializeField]
+    private Rigidbody2D playerRigidbody2D;
+
     [SerializeField] private Animator playerAnimator;
     [SerializeField] private PlayerController playerController;
 
-    [Header("Rotation VFX")]
-    [SerializeField] private GameObject vaporEffectL;
+    [Header("Rotation VFX")] [SerializeField]
+    private GameObject vaporEffectL;
+
     [SerializeField] private GameObject vaporEffectR;
 
-    [Header("Propulsion VFX")]
-    [SerializeField] private Transform propulsionEffect;
+    [Header("Propulsion VFX")] [SerializeField]
+    private Transform propulsionEffect;
+
     [SerializeField] private Transform minPropulsionEffect;
     [SerializeField] private Transform maxPropulsionEffect;
 
-    [Header("Tuning")]
-    [Tooltip("Velocidad base al extender el propulsor (aceleración)")]
-    [SerializeField] private float propulsionExtendSpeed = 10f;
-
-    [Tooltip("Multiplicador visual del linearDamping para la recogida")]
+    [Header("Tuning")] [SerializeField] private float propulsionExtendSpeed = 10f;
     [SerializeField] private float dampingRetractMultiplier = 1.5f;
 
     private static readonly int IsInputHash = Animator.StringToHash("isInput");
 
+    // ===== Cached state =====
+    private bool _wasThrusting;
+    private int _lastRotationSign; // -1, 0, +1
+
+    private bool _isGameplay;
+
+    private void Start()
+    {
+        GameBootstrap.Instance.GameState.OnGameStarted += GameStateOnOnGameStarted;
+        GameBootstrap.Instance.GameState.OnGameOver += GameStateOnOnGameOver;
+    }
+
+    private void GameStateOnOnGameOver()
+    {
+        _isGameplay = false;
+    }
+
+    private void GameStateOnOnGameStarted()
+    {
+        _isGameplay = true;
+    }
+
+    private void OnDisable()
+    {
+        GameBootstrap.Instance.GameState.OnGameStarted -= GameStateOnOnGameStarted;
+        GameBootstrap.Instance.GameState.OnGameOver -= GameStateOnOnGameOver;
+    }
+
     private void Update()
     {
+        if (!_isGameplay) return;
         UpdateAnimator();
         UpdateRotationVfx();
         UpdatePropulsionVfx();
+        UpdateAudio();
     }
 
     // =====================
@@ -77,15 +108,12 @@ public class PlayerBodyVisual : MonoBehaviour
 
         if (playerController.IsThrusting)
         {
-            // 🔥 Acelerando → respuesta rápida
             targetPosition = maxPropulsionEffect.localPosition;
             lerpSpeed = propulsionExtendSpeed;
         }
         else
         {
-            // 🧊 Desacelerando → ligado al damping de la nave
             targetPosition = minPropulsionEffect.localPosition;
-
             float damping = Mathf.Max(0.01f, playerRigidbody2D.linearDamping);
             lerpSpeed = damping * dampingRetractMultiplier;
         }
@@ -95,5 +123,24 @@ public class PlayerBodyVisual : MonoBehaviour
             targetPosition,
             Time.deltaTime * lerpSpeed
         );
+    }
+
+    // =====================
+    // Audio (STATE → SOUND)
+    // =====================
+
+    private void UpdateAudio()
+    {
+        _wasThrusting = playerController.IsThrusting;
+
+        // 🔄 Rotation sound (cuando empieza a girar)
+        int currentRotationSign = 0;
+
+        if (playerController.IsRotatingClockwise())
+            currentRotationSign = -1;
+        else if (playerController.IsRotatingCounterClockwise())
+            currentRotationSign = 1;
+
+        _lastRotationSign = currentRotationSign;
     }
 }
