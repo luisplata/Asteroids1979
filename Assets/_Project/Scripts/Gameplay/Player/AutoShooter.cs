@@ -14,13 +14,17 @@ public class AutoShooter : MonoBehaviour
 
     public Vector3 Direction => direction;
 
-    void Awake()
+    private bool _isGamePlaying;
+
+    public void Configure(Player player)
     {
-        player = GetComponent<Player>();
+        this.player = player;
+        _isGamePlaying = true;
     }
 
     void Update()
     {
+        if (!_isGamePlaying) return;
         timer += Time.deltaTime;
 
         if (timer >= 1f / player.stats.fireRate)

@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using System.Linq;
+using _Project.Scripts.Bootstrap;
 using UnityEngine;
 using Random = UnityEngine.Random;
 
@@ -53,7 +54,7 @@ public class PerkSystem : MonoBehaviour
         if (perkSelectionUI != null)
         {
             perkSelectionUI.Show(perks, OnPerkSelected);
-            GamePauseController.Pause();
+            GameBootstrap.Instance.TimeScale.Pause();
         }
     }
 
@@ -62,7 +63,7 @@ public class PerkSystem : MonoBehaviour
         if (perkContainer != null)
         {
             perkContainer.AddPerk(perk);
-            GamePauseController.Resume();
+            GameBootstrap.Instance.TimeScale.Resume();
         }
     }
 

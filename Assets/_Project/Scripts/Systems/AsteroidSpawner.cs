@@ -1,4 +1,6 @@
-﻿using UnityEngine;
+﻿using _Project.Scripts.Bootstrap;
+using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class AsteroidSpawner : MonoBehaviour
 {
@@ -33,8 +35,33 @@ public class AsteroidSpawner : MonoBehaviour
 
     private float timer;
 
+    private bool _isGameplay;
+    
+    public void Configure()
+    {
+        GameBootstrap.Instance.GameState.OnGameStarted += GameStateOnOnGameStarted;
+        GameBootstrap.Instance.GameState.OnGameOver += GameStateOnOnGameOver;
+    }
+
+    private void OnDisable()
+    {
+        GameBootstrap.Instance.GameState.OnGameStarted -= GameStateOnOnGameStarted;
+        GameBootstrap.Instance.GameState.OnGameOver -= GameStateOnOnGameOver;
+    }
+
+    private void GameStateOnOnGameOver()
+    {
+        _isGameplay = false;
+    }
+
+    private void GameStateOnOnGameStarted()
+    {
+        _isGameplay = true;
+    }
+
     void Update()
     {
+        if (!_isGameplay) return;
         timer += Time.deltaTime;
 
         if (timer >= spawnRate)

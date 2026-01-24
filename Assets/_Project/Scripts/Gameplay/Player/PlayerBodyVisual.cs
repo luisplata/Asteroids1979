@@ -18,8 +18,11 @@ public class PlayerBodyVisual : MonoBehaviour
     [SerializeField] private Transform maxPropulsionEffect;
 
     [Header("Tuning")]
+    [Tooltip("Velocidad base al extender el propulsor (aceleración)")]
     [SerializeField] private float propulsionExtendSpeed = 10f;
-    [SerializeField] private float propulsionRetractSpeed = 6f;
+
+    [Tooltip("Multiplicador visual del linearDamping para la recogida")]
+    [SerializeField] private float dampingRetractMultiplier = 1.5f;
 
     private static readonly int IsInputHash = Animator.StringToHash("isInput");
 
@@ -70,26 +73,27 @@ public class PlayerBodyVisual : MonoBehaviour
     private void UpdatePropulsionVfx()
     {
         Vector3 targetPosition;
+        float lerpSpeed;
 
         if (playerController.IsThrusting)
         {
-            // Acelerando → propulsor extendido
+            // 🔥 Acelerando → respuesta rápida
             targetPosition = maxPropulsionEffect.localPosition;
+            lerpSpeed = propulsionExtendSpeed;
         }
         else
         {
-            // Sin empuje → propulsor se retrae
+            // 🧊 Desacelerando → ligado al damping de la nave
             targetPosition = minPropulsionEffect.localPosition;
-        }
 
-        float speed = playerController.IsThrusting
-            ? propulsionExtendSpeed
-            : propulsionRetractSpeed;
+            float damping = Mathf.Max(0.01f, playerRigidbody2D.linearDamping);
+            lerpSpeed = damping * dampingRetractMultiplier;
+        }
 
         propulsionEffect.localPosition = Vector3.Lerp(
             propulsionEffect.localPosition,
             targetPosition,
-            Time.deltaTime * speed
+            Time.deltaTime * lerpSpeed
         );
     }
 }

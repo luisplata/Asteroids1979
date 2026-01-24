@@ -1,3 +1,4 @@
+using _Project.Scripts.Bootstrap;
 using UnityEngine;
 
 namespace _Project.Scripts.Gameplay.Player
@@ -5,16 +6,13 @@ namespace _Project.Scripts.Gameplay.Player
     [RequireComponent(typeof(Rigidbody2D))]
     public class PlayerController : MonoBehaviour
     {
-        [Header("Movement")]
-        [SerializeField] private float thrust = 1f;
+        [Header("Movement")] [SerializeField] private float thrust = 1f;
         [SerializeField] private float maxSpeed = 2f;
         [SerializeField] private float linearDamping = 1f;
 
-        [Header("Rotation")]
-        [SerializeField] private float turnSpeed = 180f; // degrees per second
+        [Header("Rotation")] [SerializeField] private float turnSpeed = 180f; // degrees per second
 
-        [Header("Input")]
-        [SerializeField] private Joystick joystick;
+        [Header("Input")] [SerializeField] private Joystick joystick;
 
         private Rigidbody2D _rb;
 
@@ -29,22 +27,22 @@ namespace _Project.Scripts.Gameplay.Player
         public float MaxSpeed => maxSpeed;
         public bool IsThrusting { get; private set; }
 
-        void Awake()
+        private bool _isGameplay;
+
+
+        private void GameStateOnOnGameOver()
         {
-            _rb = GetComponent<Rigidbody2D>();
+            _isGameplay = false;
+        }
 
-            // Nave espacial "flotante"
-            _rb.gravityScale = 0f;
-            _rb.linearDamping = linearDamping;
-            _rb.angularDamping = 0f;
-
-            // Inicia mirando hacia arriba (Y+)
-            _rb.rotation = 0f;
-            _targetAngle = 0f;
+        private void GameStateOnOnGameStarted()
+        {
+            _isGameplay = true;
         }
 
         void FixedUpdate()
         {
+            if (!_isGameplay) return;
             Vector2 input = ReadInput();
             bool hasInput = input.sqrMagnitude > InputDeadZone * InputDeadZone;
 
@@ -151,6 +149,28 @@ namespace _Project.Scripts.Gameplay.Player
         public bool IsRotatingCounterClockwise()
         {
             return _rotationSign > 0;
+        }
+
+        public void Configure()
+        {
+            GameBootstrap.Instance.GameState.OnGameStarted += GameStateOnOnGameStarted;
+            GameBootstrap.Instance.GameState.OnGameOver += GameStateOnOnGameOver;
+            _rb = GetComponent<Rigidbody2D>();
+
+            // Nave espacial "flotante"
+            _rb.gravityScale = 0f;
+            _rb.linearDamping = linearDamping;
+            _rb.angularDamping = 0f;
+
+            // Inicia mirando hacia arriba (Y+)
+            _rb.rotation = 0f;
+            _targetAngle = 0f;
+        }
+
+        private void OnDisable()
+        {
+            GameBootstrap.Instance.GameState.OnGameStarted -= GameStateOnOnGameStarted;
+            GameBootstrap.Instance.GameState.OnGameOver -= GameStateOnOnGameOver;
         }
     }
 }
