@@ -814,13 +814,13 @@ MonoBehaviour:
   m_EditorClassIdentifier: Assembly-CSharp::_Project.Scripts.UI.BGController
   bgImage: {fileID: 253942727}
   playerRigidbody: {fileID: 1930745202}
-  velocityStrength: 0.015
-  invertDirection: 1
+  velocityStrength: 2
+  invertDirection: 0
   useX: 1
   useY: 1
-  uvScale: {x: 1, y: 1}
+  uvScale: {x: 8, y: 4}
   smoothSpeed: 4
-  maxOffset: 0.6
+  maxOffset: 0
 --- !u!114 &253942727
 MonoBehaviour:
   m_ObjectHideFlags: 0
