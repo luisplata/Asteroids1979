@@ -1,5 +1,6 @@
 using UnityEngine;
 using _Project.Scripts.Gameplay;
+using UnityEngine.SceneManagement;
 
 namespace _Project.Scripts.Bootstrap
 {
@@ -9,9 +10,10 @@ namespace _Project.Scripts.Bootstrap
 
         public GameStateMachine GameState;
         public TimeScaleGuard TimeScale;
-        
+
         [SerializeField] private AsteroidSpawner asteroidSpawner;
         [SerializeField] private Player player;
+        [SerializeField] private GameObject gameOverScreen;
 
         void Awake()
         {
@@ -33,6 +35,12 @@ namespace _Project.Scripts.Bootstrap
             GameState.OnGameStarted += TimeScale.Resume;
             GameState.OnReturnedToMenu += TimeScale.Resume;
             GameState.OnGameOver += TimeScale.Pause;
+            GameState.OnGameOver += () => { gameOverScreen.SetActive(true); };
+        }
+        
+        public void RestartGame()
+        {
+            SceneManager.LoadScene(0);
         }
     }
 }
